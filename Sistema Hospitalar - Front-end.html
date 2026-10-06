@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hospital São Lucas · Sistema de Informação Hospitalar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#f4f7f7;--panel:#fff;--ink:#14262b;--mute:#5d7076;--line:#dbe4e5;--brand:#0e6b6b;--brand-ink:#fff;--side:#0f2a2e;--side-ink:#cfe0e1;--ok:#1d7a4d;--okb:#e0f3e8;--warn:#9a5b00;--warnb:#fdf0d5;--bad:#a8372a;--badb:#fbe3df;--info:#1f5f99;--infob:#e0edf9;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1a1d;--panel:#13272b;--ink:#e6f0f0;--mute:#93a9ad;--line:#244146;--brand:#3fb5b0;--brand-ink:#08201f;--side:#08151761;--side-ink:#cfe0e1;--okb:#173a2a;--ok:#6fd9a0;--warnb:#3d2d0c;--warn:#f0b955;--badb:#431c17;--bad:#f09a8d;--infob:#14304a;--info:#8cc1f0}}
+:root[data-theme="dark"]{--bg:#0c1a1d;--panel:#13272b;--ink:#e6f0f0;--mute:#93a9ad;--line:#244146;--brand:#3fb5b0;--brand-ink:#08201f;--side:#08151761;--okb:#173a2a;--ok:#6fd9a0;--warnb:#3d2d0c;--warn:#f0b955;--badb:#431c17;--bad:#f09a8d;--infob:#14304a;--info:#8cc1f0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;min-height:100vh}
+aside{width:232px;flex:none;background:var(--side);color:var(--side-ink);padding:20px 12px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
+.logo{display:flex;gap:10px;align-items:center;padding:4px 10px 18px;color:#fff;font-weight:600;font-size:16px;line-height:1.2}
+.logo i{width:30px;height:30px;border-radius:8px;background:#fff;display:grid;place-items:center;position:relative}
+.logo i:before,.logo i:after{content:"";position:absolute;background:#0e6b6b;border-radius:2px}
+.logo i:before{width:16px;height:5px}.logo i:after{width:5px;height:16px}
+.logo small{display:block;font-weight:400;opacity:.65;font-size:12px}
+nav button{all:unset;box-sizing:border-box;width:100%;padding:9px 12px;border-radius:8px;cursor:pointer;color:var(--side-ink)}
+nav button:hover{background:rgba(255,255,255,.08)}
+nav button[aria-current="page"]{background:#fff;color:#0f2a2e;font-weight:600}
+nav button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.user{margin-top:auto;padding:10px 12px;font-size:13px;opacity:.8;border-top:1px solid rgba(255,255,255,.14)}
+main{flex:1;min-width:0;padding:28px clamp(16px,3vw,40px) 48px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+h1{margin:0;font-size:26px;font-weight:600;letter-spacing:-.01em}
+.sub{color:var(--mute);margin:2px 0 0}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;padding:9px 16px;border-radius:8px;background:var(--brand);color:var(--brand-ink);font-weight:500}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+.card h2{margin:0 0 14px;font-size:16px;font-weight:600}
+.tools{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.tools input,.tools select{flex:1;min-width:140px}
+.wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:500;color:var(--mute);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.act{color:var(--brand);text-align:right}
+td.act span{margin-left:12px;cursor:pointer}
+.b{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12.5px;font-weight:500}
+.b.ok{background:var(--okb);color:var(--ok)}.b.warn{background:var(--warnb);color:var(--warn)}.b.bad{background:var(--badb);color:var(--bad)}.b.info{background:var(--infob);color:var(--info)}
+label{display:block;font-size:13px;color:var(--mute);margin:0 0 12px}
+input,select,textarea{display:block;width:100%;margin-top:4px;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:72px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actions{display:flex;gap:10px;margin-top:6px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:20px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.stat b{display:block;font-size:30px;font-weight:600;line-height:1.1}.stat span{color:var(--mute);font-size:14px}
+.rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.room{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--bg)}
+.room b{font-size:18px}.room p{margin:2px 0 8px;color:var(--mute);font-size:13px}
+.bar{height:6px;border-radius:9px;background:var(--line);overflow:hidden;margin:8px 0 4px}.bar i{display:block;height:100%;background:var(--brand)}
+.tl{list-style:none;margin:0;padding:0 0 0 18px;border-left:2px solid var(--line)}
+.tl li{position:relative;padding:0 0 18px 14px}
+.tl li:before{content:"";position:absolute;left:-25px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--brand);border:2px solid var(--panel)}
+.tl li.int:before{background:var(--warn)}
+.tl small{color:var(--mute);display:block}
+.pat{display:flex;gap:14px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.av{width:48px;height:48px;border-radius:50%;background:var(--infob);color:var(--info);display:grid;place-items:center;font-weight:600}
+@media (max-width:900px){body{display:block}aside{position:static;width:auto;height:auto;flex-direction:row;overflow-x:auto;padding:10px}.logo{padding:4px 10px}.logo small,.user{display:none}nav{display:flex;gap:4px}nav button{white-space:nowrap;width:auto}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo"><i></i><div>Hospital São Lucas<small>Sistema hospitalar</small></div></div>
+  <nav id="nav" aria-label="Menu principal"></nav>
+  <div class="user">Recepção · Ana Souza</div>
+</aside>
+<main id="app" tabindex="-1"></main>
+
+<script>
+var S={
+ inicio:{label:"Início"},
+ pacientes:{label:"Pacientes",one:"paciente",
+  cols:["Nome","CPF","Nascimento","Telefone","E-mail"],
+  rows:[["Maria Aparecida Lima","123.456.789-00","14/03/1978","(31) 98811-2040","maria.lima@email.com"],["João Pedro Alves","987.654.321-00","02/09/1995","(31) 99702-5531","joao.alves@email.com"],["Helena Duarte","456.123.789-10","21/11/1962","(31) 3441-9082","helena.d@email.com"],["Carlos Eduardo Reis","321.654.987-22","05/06/1989","(31) 98450-7716","carlos.reis@email.com"]],
+  form:[["Nome completo"],["CPF","Nascimento|date"],["Telefone","E-mail|email"],["Endereço"]]},
+ profissionais:{label:"Profissionais",one:"profissional",
+  cols:["Nome","Registro","Especialidade","Telefone","E-mail"],
+  rows:[["Dra. Fernanda Moreira","CRM-MG 48213","Cardiologia","(31) 99120-4410","fernanda.m@hsl.org"],["Dr. Ricardo Tavares","CRM-MG 39877","Ortopedia","(31) 98877-3021","ricardo.t@hsl.org"],["Dra. Patrícia Nunes","CRM-MG 51002","Clínica geral","(31) 99644-1208","patricia.n@hsl.org"]],
+  form:[["Nome completo"],["Registro profissional","Especialidade|select:Cardiologia,Ortopedia,Clínica geral,Pediatria"],["Telefone","E-mail|email"]]},
+ consultas:{label:"Consultas",one:"consulta",
+  cols:["Data","Horário","Paciente","Profissional","Motivo","Situação"],
+  rows:[["06/10/2026","08:30","Maria Aparecida Lima","Dra. Fernanda Moreira","Retorno cardiológico","{info|Agendada}"],["06/10/2026","09:15","João Pedro Alves","Dr. Ricardo Tavares","Dor no joelho","{ok|Realizada}"],["06/10/2026","10:00","Helena Duarte","Dra. Patrícia Nunes","Exames de rotina","{info|Agendada}"],["05/10/2026","14:00","Carlos Eduardo Reis","Dr. Ricardo Tavares","Avaliação pós-cirúrgica","{bad|Cancelada}"]],
+  form:[["Paciente|select:Maria Aparecida Lima,João Pedro Alves,Helena Duarte"],["Profissional|select:Dra. Fernanda Moreira,Dr. Ricardo Tavares,Dra. Patrícia Nunes"],["Data|date","Horário|time"],["Motivo da consulta"],["Observações médicas|area"]]},
+ internacoes:{label:"Internações",one:"internação",
+  cols:["Paciente","Quarto","Responsável","Entrada","Alta prevista","Alta efetiva","Situação"],
+  rows:[["Helena Duarte","203","Dra. Patrícia Nunes","02/10/2026","08/10/2026","—","{warn|Internada}"],["Carlos Eduardo Reis","105","Dr. Ricardo Tavares","28/09/2026","03/10/2026","04/10/2026","{ok|Alta concedida}"],["Maria Aparecida Lima","301","Dra. Fernanda Moreira","04/10/2026","09/10/2026","—","{warn|Internada}"]],
+  form:[["Paciente|select:Maria Aparecida Lima,João Pedro Alves,Helena Duarte"],["Profissional responsável|select:Dra. Fernanda Moreira,Dr. Ricardo Tavares,Dra. Patrícia Nunes"],["Quarto|select:101 (1 vaga),203 (1 vaga),302 (2 vagas)"],["Data de entrada|date","Alta prevista|date"],["Observações|area"]]},
+ quartos:{label:"Quartos",one:"quarto"},
+ historico:{label:"Histórico médico"}
+};
+var keys=Object.keys(S),app=document.getElementById("app"),nav=document.getElementById("nav");
+function badge(v){var m=/^\{(\w+)\|(.+)\}$/.exec(v);return m?'<span class="b '+m[1]+'">'+m[2]+'</span>':v}
+function field(spec){
+ var p=spec.split("|"),n=p[0],t=p[1]||"text",c;
+ if(t.indexOf("select:")==0)c='<select>'+t.slice(7).split(",").map(function(o){return"<option>"+o+"</option>"}).join("")+'</select>';
+ else if(t=="area")c='<textarea></textarea>';
+ else c='<input type="'+t+'">';
+ return'<label>'+n+c+'</label>';
+}
+function formCard(s,title){
+ return'<section class="card"><h2>'+title+'</h2>'+s.form.map(function(r){return r.length>1?'<div class="row2">'+r.map(field).join("")+'</div>':field(r[0])}).join("")+'<div class="actions"><button class="btn">Salvar '+s.one+'</button><button class="btn ghost">Limpar</button></div></section>';
+}
+function listView(k){
+ var s=S[k];
+ return'<div class="head"><div><h1>'+s.label+'</h1><p class="sub">'+s.rows.length+' registros</p></div><button class="btn">Novo '+s.one+'</button></div>'+
+ '<div class="grid"><section class="card"><div class="tools"><input placeholder="Buscar em '+s.label.toLowerCase()+'" aria-label="Buscar"><select aria-label="Ordenar"><option>Mais recentes</option><option>A–Z</option></select></div><div class="wrap"><table><thead><tr>'+s.cols.map(function(c){return"<th>"+c+"</th>"}).join("")+'<th></th></tr></thead><tbody>'+
+ s.rows.map(function(r){return"<tr>"+r.map(function(c){return"<td>"+badge(c)+"</td>"}).join("")+'<td class="act"><span>Editar</span><span>Excluir</span></td></tr>'}).join("")+'</tbody></table></div></section>'+formCard(s,"Cadastrar "+s.one)+'</div>';
+}
+function inicio(){
+ var st=[["128","Pacientes cadastrados"],["14","Consultas hoje"],["9","Pacientes internados"],["6","Quartos com vaga"]];
+ var s=S.consultas;
+ return'<div class="head"><div><h1>Bom dia, Ana</h1><p class="sub">Terça-feira, 6 de outubro de 2026</p></div><button class="btn">Agendar consulta</button></div><div class="stats">'+
+ st.map(function(x){return'<div class="stat"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>'}).join("")+'</div>'+
+ '<section class="card"><h2>Consultas de hoje</h2><div class="wrap"><table><thead><tr><th>Horário</th><th>Paciente</th><th>Profissional</th><th>Situação</th></tr></thead><tbody>'+
+ s.rows.slice(0,3).map(function(r){return"<tr><td>"+r[1]+"</td><td>"+r[2]+"</td><td>"+r[3]+"</td><td>"+badge(r[5])+"</td></tr>"}).join("")+'</tbody></table></div></section>';
+}
+function quartos(){
+ var q=[["101","1º andar",1,2],["102","1º andar",2,2],["203","2º andar",1,2],["204","2º andar",0,1],["301","3º andar",1,3],["302","3º andar",1,3]];
+ var s={one:"quarto",form:[["Número","Andar"],["Capacidade máxima","Situação|select:Disponível,Ocupado"]]};
+ return'<div class="head"><div><h1>Quartos</h1><p class="sub">Ocupação atual por quarto</p></div><button class="btn">Novo quarto</button></div><div class="grid"><section class="card"><div class="rooms">'+
+ q.map(function(r){var full=r[2]>=r[3];return'<div class="room"><b>'+r[0]+'</b><p>'+r[1]+'</p><span class="b '+(full?"warn":"ok")+'">'+(full?"Ocupado":"Disponível")+'</span><div class="bar"><i style="width:'+(r[2]/r[3]*100)+'%"></i></div><small>'+r[2]+' de '+r[3]+' leitos</small></div>'}).join("")+'</div></section>'+formCard(s,"Cadastrar quarto")+'</div>';
+}
+function historico(){
+ return'<div class="head"><div><h1>Histórico médico</h1><p class="sub">Consultas, internações e anotações do paciente</p></div></div>'+
+ '<section class="card" style="margin-bottom:20px"><div class="tools" style="margin:0"><select aria-label="Paciente"><option>Helena Duarte</option><option>Maria Aparecida Lima</option><option>João Pedro Alves</option></select><button class="btn">Consultar histórico</button></div></section>'+
+ '<div class="grid"><section class="card"><div class="pat"><div class="av">HD</div><div><b>Helena Duarte</b><div class="sub">CPF 456.123.789-10 · 63 anos</div></div></div><ul class="tl">'+
+ '<li class="int"><b>Internação · Quarto 203</b><small>02/10/2026 · Dra. Patrícia Nunes</small>Em observação; alta prevista para 08/10.</li>'+
+ '<li><b>Consulta · Exames de rotina</b><small>06/10/2026 · Dra. Patrícia Nunes</small>Solicitado novo hemograma.</li>'+
+ '<li><b>Consulta · Dor torácica</b><small>30/09/2026 · Dra. Fernanda Moreira</small>Encaminhada para internação.</li></ul></section>'+
+ '<section class="card"><h2>Informações relevantes</h2><p class="sub" style="margin-bottom:10px">Alergia a dipirona. Hipertensa, em uso de losartana.</p><label>Nova anotação<textarea></textarea></label><div class="actions"><button class="btn">Adicionar anotação</button></div></section></div>';
+}
+function show(k){
+ app.innerHTML=k=="inicio"?inicio():k=="quartos"?quartos():k=="historico"?historico():listView(k);
+ [].forEach.call(nav.children,function(b){b.toggleAttribute("aria-current",b.dataset.k==k);if(b.dataset.k==k)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+ window.scrollTo(0,0);
+}
+nav.innerHTML=keys.map(function(k){return'<button data-k="'+k+'">'+S[k].label+'</button>'}).join("");
+nav.onclick=function(e){var k=e.target.dataset&&e.target.dataset.k;if(k)show(k)};
+show("inicio");
+</script>
+</body>
+</html>
