@@ -1,0 +1,187 @@
+@startuml
+title Sistema de Informação Hospitalar - Diagrama de Classes (Sprint 2)
+skinparam classAttributeIconSize 0
+hide empty members
+
+abstract class Pessoa {
+  -id : Long
+  -nome : String
+  -telefone : String
+  -email : String
+}
+
+class Paciente {
+  -cpf : String
+  -dataNascimento : LocalDate
+  -endereco : String
+}
+
+abstract class ProfissionalSaude {
+  -registroProfissional : String
+  +{abstract} getCategoria() : String
+  +{abstract} descreverAtribuicoes() : String
+}
+
+abstract class Medico
+class MedicoClinicoGeral
+class MedicoEspecialista {
+  -especialidade : Especialidade
+}
+class Cirurgiao {
+  -areaCirurgica : String
+}
+
+Pessoa <|-- Paciente
+Pessoa <|-- ProfissionalSaude
+ProfissionalSaude <|-- Medico
+Medico <|-- MedicoClinicoGeral
+Medico <|-- MedicoEspecialista
+Medico <|-- Cirurgiao
+
+abstract class Atendimento {
+  -id : Long
+  -data : LocalDate
+  -horario : LocalTime
+  -observacoes : String
+  +{abstract} validarRealizacao() : void
+  +{abstract} ocupaAgenda() : boolean
+  +{abstract} getModalidade() : String
+}
+
+abstract class Consulta {
+  -motivo : String
+  -status : StatusConsulta
+  #{abstract} validarProfissional() : void
+  +confirmar() : void
+  +iniciarAtendimento() : void
+  +concluir(observacoes : String) : void
+  +cancelar() : void
+  +registrarNaoComparecimento() : void
+  +registrarObservacoes(obs : String) : void
+}
+
+class ConsultaRotina
+class ConsultaEspecializada {
+  -especialidade : Especialidade
+}
+
+class AtendimentoEmergencia {
+  -prioridade : PrioridadeEmergencia
+  -status : StatusEmergencia
+  -queixa : String
+  +iniciar(medico : ProfissionalSaude) : void
+  +concluir(obs : String) : void
+  +reclassificar(p : PrioridadeEmergencia) : void
+}
+
+class ProcedimentoCirurgico {
+  -descricao : String
+  -tipoCirurgia : TipoCirurgia
+  -observacoesPreOperatorias : String
+  -observacoesPosOperatorias : String
+  -dataEfetiva : LocalDate
+  -horarioEfetivo : LocalTime
+  -status : StatusProcedimento
+  +iniciar() : void
+  +concluir(posOp : String) : void
+  +cancelar() : void
+}
+
+Atendimento <|-- Consulta
+Atendimento <|-- AtendimentoEmergencia
+Atendimento <|-- ProcedimentoCirurgico
+Consulta <|-- ConsultaRotina
+Consulta <|-- ConsultaEspecializada
+
+class Quarto {
+  -id : Long
+  -numero : int
+  -andar : int
+  -capacidadeMaxima : int
+  -ocupacaoAtual : int
+  -tipo : TipoQuarto
+  +possuiVaga() : boolean
+  +ocuparVaga() : void
+  +liberarVaga() : void
+  +getStatus() : StatusQuarto
+}
+
+class Internacao {
+  -id : Long
+  -dataEntrada : LocalDate
+  -dataPrevistaAlta : LocalDate
+  -dataEfetivaAlta : LocalDate
+  -observacoes : String
+  +isAtiva() : boolean
+  +registrarAlta(data : LocalDate) : void
+}
+
+Paciente "1" -- "0..*" Atendimento : recebe >
+ProfissionalSaude "1" -- "0..*" Atendimento : responsável por >
+ProcedimentoCirurgico "0..*" -- "1" Cirurgiao : realizado por >
+Paciente "1" -- "0..*" Internacao : é internado >
+Medico "1" -- "0..*" Internacao : responsável por >
+Internacao "0..*" -- "1" Quarto : ocupa >
+
+enum StatusConsulta {
+  AGENDADA
+  CONFIRMADA
+  EM_ATENDIMENTO
+  CONCLUIDA
+  CANCELADA
+  NAO_COMPARECEU
+}
+enum StatusProcedimento {
+  AGENDADO
+  EM_ANDAMENTO
+  CONCLUIDO
+  CANCELADO
+}
+enum StatusEmergencia {
+  AGUARDANDO_AVALIACAO
+  EM_ATENDIMENTO
+  CONCLUIDO
+}
+enum PrioridadeEmergencia {
+  BAIXA
+  MODERADA
+  ALTA
+  CRITICA
+}
+enum TipoCirurgia {
+  ELETIVA
+  URGENTE
+  EMERGENCIAL
+}
+enum TipoQuarto {
+  ENFERMARIA
+  APARTAMENTO
+  UTI
+  ISOLAMENTO
+}
+enum StatusQuarto {
+  DISPONIVEL
+  OCUPADO
+}
+enum Especialidade {
+  CARDIOLOGIA
+  NEUROLOGIA
+  ORTOPEDIA
+  ...
+}
+
+Consulta ..> StatusConsulta
+ProcedimentoCirurgico ..> StatusProcedimento
+ProcedimentoCirurgico ..> TipoCirurgia
+AtendimentoEmergencia ..> StatusEmergencia
+AtendimentoEmergencia ..> PrioridadeEmergencia
+Quarto ..> TipoQuarto
+Quarto ..> StatusQuarto
+MedicoEspecialista ..> Especialidade
+ConsultaEspecializada ..> Especialidade
+
+note bottom of Paciente
+  O histórico médico é uma consulta calculada
+  (GET /pacientes/{id}/historico), não uma entidade.
+end note
+@enduml
