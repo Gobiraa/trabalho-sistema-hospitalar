@@ -1,0 +1,6 @@
+package br.com.hospital.model.enums;
+
+public enum Especialidade {
+    CARDIOLOGIA, NEUROLOGIA, ORTOPEDIA, DERMATOLOGIA, PEDIATRIA,
+    GINECOLOGIA, OFTALMOLOGIA, PSIQUIATRIA, ENDOCRINOLOGIA
+}
